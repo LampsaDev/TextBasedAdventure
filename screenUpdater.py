@@ -17,9 +17,9 @@ class screenUpdater:
     currentTimeInSeconds = 0
     scene = None
     content = None
-    question = None
     stats = None
-    selection = 1
+
+    selection = 0
 
     """
     Updates scene
@@ -31,9 +31,6 @@ class screenUpdater:
     def setContent(self, newContent):
         self.content = newContent
 
-    def setQuestion(self, newQuestion):
-        self.question = newQuestion
-
     def setStats(self, newStats):
         self.stats = newStats
 
@@ -43,9 +40,6 @@ class screenUpdater:
 
     def setTimerSeconds(self, newTime):
         self.currentTimeInSeconds = newTime
-
-    def setSelection(self, newSelection):
-        self.selection = newSelection
 
     """
     Updates the frame.
@@ -81,7 +75,6 @@ class screenUpdater:
             sceneHeight += self.drawHelperText(
                 "'W' = Up, 'S' = Down, 'Space' = Confirm", True, True
             )
-            sceneHeight += self.drawStatBar()
         else:  # "story"-scene
             titleHeight = self.drawTitleBar(self.scene)
             sceneHeight += self.drawOptions()
@@ -115,10 +108,10 @@ class screenUpdater:
     """
 
     def drawOptions(self):
-        if not self.question:
+        if not self.content:
             return 0
-        question = self.question[0]
-        options = self.question[1]
+        question = self.content[2][0]
+        options = self.content[2][1]
         self.drawHLine()
         lineAmount = 1
         lineAmount += self.drawLine("")

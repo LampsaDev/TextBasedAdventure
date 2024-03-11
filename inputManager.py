@@ -14,6 +14,7 @@ class inputManager:
         ready, _, _ = select.select([sys.stdin], [], [], timeout)
         if ready:
             print(sys.stdin)
+            # not working
             # If input is available, read a single character
             key = sys.stdin.read(1)
             self.previousKey = key

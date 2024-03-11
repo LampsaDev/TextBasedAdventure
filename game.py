@@ -1,3 +1,4 @@
+import time
 import screenUpdater
 
 welcomePage = "jee", "juu", ["Main Menu", ["New Game", "Load Save", "Quit"]]
