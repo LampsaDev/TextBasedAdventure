@@ -8,7 +8,7 @@ import os
 import math
 
 
-class screenUpdater:
+class buffer:
     def __init__(self, xSize, ySize):
         self.horizontalSize = xSize - 3
         self.verticalSize = ySize
@@ -17,9 +17,14 @@ class screenUpdater:
     currentTimeInSeconds = 0
     scene = None
     content = None
+    question = None
     stats = None
 
+    activate = False
     selection = 0
+
+    if activate:
+        activate = False
 
     """
     Updates scene
@@ -30,6 +35,9 @@ class screenUpdater:
 
     def setContent(self, newContent):
         self.content = newContent
+
+    def setQuestion(self, newQuestion):
+        self.question = newQuestion
 
     def setStats(self, newStats):
         self.stats = newStats
@@ -54,7 +62,8 @@ class screenUpdater:
             self.verticalSize = terminalHeight - 2
         if terminalWidth < 64:
             self.drawTitleBar(
-                "Terminal must be atleast 64 columns. Now: " + str(terminalWidth)
+                "Terminal must be atleast 64 columns. Now: " +
+                str(terminalWidth)
             )
             return
         elif terminalHeight < 24:
@@ -79,7 +88,8 @@ class screenUpdater:
             titleHeight = self.drawTitleBar(self.scene)
             sceneHeight += self.drawOptions()
             sceneHeight += self.drawStatBar()
-            sceneHeight += self.drawHelperText("Press 'Space' to confirm", True, True)
+            sceneHeight += self.drawHelperText(
+                "Press 'Space' to confirm", True, True)
         # Fill the empty lines
         for line in range(self.verticalSize - sceneHeight - titleHeight):
             self.drawLine("")
@@ -108,10 +118,12 @@ class screenUpdater:
     """
 
     def drawOptions(self):
-        if not self.content:
+        if not self.question:
             return 0
-        question = self.content[2][0]
-        options = self.content[2][1]
+        question = self.question[0]
+        options = []
+        for option in self.question[1]:
+            options.append(option(self.activate))
         self.drawHLine()
         lineAmount = 1
         lineAmount += self.drawLine("")
@@ -124,9 +136,11 @@ class screenUpdater:
             for i in range(width - len(option)):
                 filler += " "
             if self.selection == index:
-                lineAmount += self.drawLineCentered("> " + option + " <" + filler)
+                lineAmount += self.drawLineCentered(
+                    "> " + option + " <" + filler)
             else:
-                lineAmount += self.drawLineCentered("  " + option + "  " + filler)
+                lineAmount += self.drawLineCentered(
+                    "  " + option + "  " + filler)
         lineAmount += self.drawLine("")
         lineAmount += self.drawTimer()
         lineAmount += 1
@@ -159,7 +173,6 @@ class screenUpdater:
                     timer += "¤"
                 else:
                     timer += "~"
-            timer += ""
         return self.drawLineCentered(timer)
 
     def drawDecorators(self, text, flip):
@@ -221,7 +234,7 @@ class screenUpdater:
         height = 1
 
         if filler < 0:
-            leftOvers = chars[self.horizontalSize :]
+            leftOvers = chars[self.horizontalSize:]
             chars = chars[: self.horizontalSize]
             splitLine = True
 
@@ -250,7 +263,7 @@ class screenUpdater:
         filler = self.horizontalSize - len(chars)
         height = 1
         if filler < 0:
-            leftOvers = chars[self.horizontalSize :]
+            leftOvers = chars[self.horizontalSize:]
             chars = chars[: self.horizontalSize]
             self.drawLine(chars)
             height += self.drawLineCentered(leftOvers)
@@ -315,29 +328,4 @@ class screenUpdater:
         return int(rows), int(columns)
 
 
-lorem_ipsum = "Congratulations! You've stumbled upon a mysterious artifact\
-deep within the forest. However, as you reach out to touch it, a sudden surge\
-of energy knocks you back, and the artifact begins to emit a strange glow."
-
-content = [
-    "The Artifact in the Forest:",
-    lorem_ipsum,
-    [
-        "What will you do next to handle this unexpected turn of events?",
-        [
-            "Cautiously approach the artifact to inspect it further.",
-            "Retreat and seek help from someone more knowledgeable about \
-            ancient artifacts.",
-            "Attempt to deactivate the artifact by finding and removing its \
-            power source.",
-        ],
-    ],
-]
-
-obj = screenUpdater(64, 24)
-obj.setScene("Discovery of the Ancient Relic")
-obj.setContent(content)
-obj.setStats("<3 <3 <3 xX xX | Population: 10 | Food: 50 | Day: 0001")
-obj.setTimerLength(10)
-obj.updateFrame()
 # Todo changing the screen size should update the screen

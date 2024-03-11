@@ -1,4 +1,6 @@
 import sys
+import tty
+import termios
 import select
 
 
@@ -6,24 +8,16 @@ class inputManager:
     def __init__(self):
         self.previousKey = ""
 
-    def getPrevious(self):
-        return self.previousKey
-
-    def getKeypress(self, timeout=1 / 24):
-        # Wait for input with a timeout
-        ready, _, _ = select.select([sys.stdin], [], [], timeout)
-        if ready:
-            print(sys.stdin)
-            # not working
-            # If input is available, read a single character
-            key = sys.stdin.read(1)
-            self.previousKey = key
-            return key + "\n"
-        else:
-            # If no input is available within the timeout period, return None
-            return None
-
-    def getText(self):
-        # Read input from the command line
-        userInput = input("> ")
-        return userInput
+    def getChar(self):
+        fd = sys.stdin.fileno()
+        oldSettings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            # Check if there's input available within a short timeout
+            if select.select([sys.stdin], [], [], 0.01)[0]:
+                char = sys.stdin.read(1)
+                return char
+            else:
+                return ""
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, oldSettings)
