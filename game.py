@@ -9,10 +9,10 @@ gui.setScene("Main Menu")
 gui.setStats("")
 gui.setTimerLength(5)
 
-gameLogic = optionHandler.generic(gui)
+gameLogic = optionHandler.Generic(gui)
 
 welcomePage = ["jee", "juu"]
-question = [gameLogic.currentView.getGuiFormat()]
+question = gameLogic.currentView.getGuiFormat()
 
 gui.setContent(welcomePage)
 gui.setQuestion(question)
@@ -20,8 +20,6 @@ gui.setQuestion(question)
 input = input.inputManager()
 
 gui.updateFrame()
-print(question)
-fps = 60
 gameOn = True
 
 
@@ -32,7 +30,7 @@ def getInput():
 
 frameStartTime = None
 secondStartTime = None
-while gameOn:
+while gameLogic.getGameStatus():
     if frameStartTime is None:
         frameStartTime = time.time()
     if secondStartTime is None:
@@ -43,6 +41,6 @@ while gameOn:
     getInput()
     if elapsedSecondTime >= 1:
         gui.setTimerSeconds(2)
-    if elapsedFrameTime >= (1 / fps):
+    if elapsedFrameTime >= (1 / gameLogic.getFPS()):
         gui.updateFrame()
         frameStartTime = None
