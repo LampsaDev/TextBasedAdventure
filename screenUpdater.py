@@ -20,11 +20,7 @@ class buffer:
     question = None
     stats = None
 
-    activate = False
     selection = 0
-
-    if activate:
-        activate = False
 
     """
     Updates scene
@@ -49,6 +45,9 @@ class buffer:
     def setTimerSeconds(self, newTime):
         self.currentTimeInSeconds = newTime
 
+    def setSelection(self, newSelection):
+        self.selection = newSelection
+
     """
     Updates the frame.
     Must be called everytime when change is wanted.
@@ -62,8 +61,7 @@ class buffer:
             self.verticalSize = terminalHeight - 2
         if terminalWidth < 64:
             self.drawTitleBar(
-                "Terminal must be atleast 64 columns. Now: " +
-                str(terminalWidth)
+                "Terminal must be atleast 64 columns. Now: " + str(terminalWidth)
             )
             return
         elif terminalHeight < 24:
@@ -88,8 +86,7 @@ class buffer:
             titleHeight = self.drawTitleBar(self.scene)
             sceneHeight += self.drawOptions()
             sceneHeight += self.drawStatBar()
-            sceneHeight += self.drawHelperText(
-                "Press 'Space' to confirm", True, True)
+            sceneHeight += self.drawHelperText("Press 'Space' to confirm", True, True)
         # Fill the empty lines
         for line in range(self.verticalSize - sceneHeight - titleHeight):
             self.drawLine("")
@@ -123,24 +120,22 @@ class buffer:
         question = self.question[0]
         options = []
         for option in self.question[1]:
-            options.append(option(self.activate))
+            options.append(option)
         self.drawHLine()
         lineAmount = 1
         lineAmount += self.drawLine("")
         lineAmount += self.drawLineCentered(question)
         lineAmount += self.drawLine("")
-        width = self.longestStringLength(options)
+        longestWordWidth = self.longestStringLength(options)
 
         for index, option in enumerate(options):
             filler = ""
-            for i in range(width - len(option)):
+            for i in range(longestWordWidth - len(option)):
                 filler += " "
             if self.selection == index:
-                lineAmount += self.drawLineCentered(
-                    "> " + option + " <" + filler)
+                lineAmount += self.drawLineCentered("> " + option + " <" + filler)
             else:
-                lineAmount += self.drawLineCentered(
-                    "  " + option + "  " + filler)
+                lineAmount += self.drawLineCentered("  " + option + "  " + filler)
         lineAmount += self.drawLine("")
         lineAmount += self.drawTimer()
         lineAmount += 1
@@ -234,7 +229,7 @@ class buffer:
         height = 1
 
         if filler < 0:
-            leftOvers = chars[self.horizontalSize:]
+            leftOvers = chars[self.horizontalSize :]
             chars = chars[: self.horizontalSize]
             splitLine = True
 
@@ -263,7 +258,7 @@ class buffer:
         filler = self.horizontalSize - len(chars)
         height = 1
         if filler < 0:
-            leftOvers = chars[self.horizontalSize:]
+            leftOvers = chars[self.horizontalSize :]
             chars = chars[: self.horizontalSize]
             self.drawLine(chars)
             height += self.drawLineCentered(leftOvers)

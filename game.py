@@ -1,29 +1,7 @@
 import time
 from screenUpdater import buffer
 import inputManager as input
-
-
-class actions:
-    def __init__(self):
-        self.gameOn = True
-
-    def newGame(self, activate):
-        if activate:
-            self.gameOn = False
-        return str("New Game")
-
-    def loadGame(self, activate):
-        if activate:
-            self.gameOn = False
-        return str("Load Save")
-
-    def quitGame(self, activate):
-        if activate:
-            self.gameOn = False
-        return str("Quit")
-
-    def select(self):
-        gui.activate = True
+import optionHandler
 
 
 gui = buffer(64, 24)
@@ -31,10 +9,10 @@ gui.setScene("Main Menu")
 gui.setStats("")
 gui.setTimerLength(5)
 
-actions = actions()
+gameLogic = optionHandler.generic(gui)
 
 welcomePage = ["jee", "juu"]
-question = ["Main Menu", [actions.newGame, actions.loadGame, actions.quitGame]]
+question = [gameLogic.currentView.getGuiFormat()]
 
 gui.setContent(welcomePage)
 gui.setQuestion(question)
@@ -42,24 +20,19 @@ gui.setQuestion(question)
 input = input.inputManager()
 
 gui.updateFrame()
-
-fps = 12
+print(question)
+fps = 60
+gameOn = True
 
 
 def getInput():
     char = input.getChar()
-    if char != "":
-        if char == "s":
-            gui.selection += 1
-        elif char == "w":
-            gui.selection -= 1
-        elif char == " ":
-            actions.select()
+    gameLogic.checkInput(char)
 
 
 frameStartTime = None
 secondStartTime = None
-while actions.gameOn:
+while gameOn:
     if frameStartTime is None:
         frameStartTime = time.time()
     if secondStartTime is None:
