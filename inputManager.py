@@ -16,7 +16,7 @@ class inputManager:
         try:
             tty.setraw(fd)
             # Check if there's input available within a short timeout
-            if select.select([sys.stdin], [], [], 0.01)[0]:
+            if select.select([sys.stdin], [], [], 0.005)[0]:
                 char = sys.stdin.read(1)
                 self.previousKey = char
 

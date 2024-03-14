@@ -2,6 +2,7 @@ import time
 from screenUpdater import buffer
 import inputManager as input
 import optionHandler
+import os
 
 
 gui = buffer(64, 24)
@@ -44,3 +45,5 @@ while gameLogic.getGameStatus():
     if elapsedFrameTime >= (1 / gameLogic.getFPS()):
         gui.updateFrame()
         frameStartTime = None
+
+os.system("clear")
