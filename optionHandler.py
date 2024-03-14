@@ -10,6 +10,8 @@ class Generic:
         self.options = {
             "w": self.moveUp,
             "s": self.moveDown,
+            "a": self.moveLeft,
+            "d": self.moveRight,
             " ": self.select,
             "y": self.yes,
             "n": self.no,
@@ -52,6 +54,12 @@ class Generic:
             self.selection += 1
             self.gui.setSelection(self.selection)
 
+    def moveLeft(self):
+        pass
+
+    def moveRight(self):
+        pass
+
     def select(self):
         optionKey = str(self.selection + 1)
         self.doAction(optionKey)
@@ -64,6 +72,9 @@ class Generic:
 
     def numberInput(self, number):
         self.doAction(number)
+
+    def timerFinished(self):
+        self.doAction("Timer")
 
     def doAction(self, key):
         if str(key) in self.currentView.options:
@@ -79,7 +90,7 @@ class ViewBuilder:
         self.parent = parent
         self.title = "Title"
         self.options = {}
-        self.options = {}
+        self.hiddenOptions = {}
         self.gui = parent.gui
 
     def getGuiFormat(self):
@@ -99,12 +110,14 @@ class ConfirmView(ViewBuilder):
             "y": ["Confirm", self.confirm],
             "n": ["Cancel", self.goBack],
         }
-        self.hiddenOptions = {"1": self.confirm, "2": self.goBack}
+        self.hiddenOptions = {"1": self.confirm, "2": self.goBack, "Timer": self.goBack}
 
     def goBack(self):
         newView = self.previousView
-        self.parent.selection = 0
         self.parent.setView(newView)
+        self.parent.selection = 0
+        self.parent.gui.setSelection(self.parent.selection)
+        print("555555")
 
     def confirm(self):
         self.action()

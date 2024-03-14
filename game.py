@@ -8,7 +8,7 @@ import os
 gui = buffer(64, 24)
 gui.setScene("Main Menu")
 gui.setStats("")
-gui.setTimerLength(5)
+gui.setTimerLength(10)
 
 gameLogic = optionHandler.Generic(gui)
 
@@ -21,12 +21,30 @@ gui.setQuestion(question)
 input = input.inputManager()
 
 gui.updateFrame()
-gameOn = True
+
+timerLenght = 10
+timerSecond = 0
+gui.setTimerLength(timerLenght)
 
 
 def getInput():
     char = input.getChar()
     gameLogic.checkInput(char)
+
+
+def secondPassed():
+    global timerLenght
+    global timerSecond
+    if timerLenght == 0:
+        return
+    if timerSecond < timerLenght:
+        timerSecond += 1
+        gui.setTimerSeconds(timerSecond)
+    else:
+        gameLogic.timerFinished()
+        timerLenght = 0
+        timerSecond = 0
+        gui.setTimerLength(timerLenght)
 
 
 frameStartTime = None
@@ -41,7 +59,9 @@ while gameLogic.getGameStatus():
     elapsedSecondTime = time.time() - secondStartTime
     getInput()
     if elapsedSecondTime >= 1:
-        gui.setTimerSeconds(2)
+        secondPassed()
+        # ToDo must do desired action like not answering or missing attack
+        secondStartTime = None
     if elapsedFrameTime >= (1 / gameLogic.getFPS()):
         gui.updateFrame()
         frameStartTime = None

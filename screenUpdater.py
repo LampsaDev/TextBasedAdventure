@@ -2,6 +2,8 @@
 This class is used for updating whats shown on screen.
 drawFrame() is run everytime when update is required.
 Has methods for drawing different objects on screen.
+
+Individual "ViewTypes" are defined here.
 """
 
 import os
