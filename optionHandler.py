@@ -10,7 +10,7 @@ class Generic:
         self.selection = 0
         self.gui = gui
         self.currentView = MainMenu(self)
-        self.fps = 12
+        self.fps = 24
 
     def getGameStatus(self):
         return self.gameStatus

@@ -20,6 +20,8 @@ class buffer:
     question = None
     stats = None
 
+    updateRequest = False
+
     selection = 0
 
     """
@@ -28,25 +30,32 @@ class buffer:
 
     def setScene(self, newScene):
         self.scene = newScene
+        self.updateRequest = True
 
     def setContent(self, newContent):
         self.content = newContent
+        self.updateRequest = True
 
     def setQuestion(self, newQuestion):
         self.question = newQuestion
+        self.updateRequest = True
 
     def setStats(self, newStats):
         self.stats = newStats
+        self.updateRequest = True
 
     def setTimerLength(self, newTimerLength):
         self.timerLengthInSeconds = newTimerLength
         self.setTimerSeconds(0)
+        self.updateRequest = True
 
     def setTimerSeconds(self, newTime):
         self.currentTimeInSeconds = newTime
+        self.updateRequest = True
 
     def setSelection(self, newSelection):
         self.selection = newSelection
+        self.updateRequest = True
 
     """
     Updates the frame.
@@ -54,21 +63,27 @@ class buffer:
     """
 
     def updateFrame(self):
+        if not self.updateRequest:
+            return
         terminalHeight, terminalWidth = self.getTerminalSize()
         os.system("clear")
-        if True:
-            self.horizontalSize = terminalWidth - 3
-            self.verticalSize = terminalHeight - 2
+
+        self.horizontalSize = terminalWidth - 3
+        self.verticalSize = terminalHeight - 2
+
         if terminalWidth < 64:
             self.drawTitleBar(
                 "Terminal must be atleast 64 columns. Now: " + str(terminalWidth)
             )
+            self.updateRequest = False
             return
         elif terminalHeight < 24:
             self.drawTitleBar(
                 "Terminal must be atleast 24 rows. Now: " + str(terminalHeight)
             )
+            self.updateRequest = False
             return
+
         sceneHeight = 0
         if self.scene == "Inventory":
             pass
@@ -90,6 +105,7 @@ class buffer:
         # Fill the empty lines
         for line in range(self.verticalSize - sceneHeight - titleHeight):
             self.drawLine("")
+        self.updateRequest = False
 
     """
     Draws text container with current actions
