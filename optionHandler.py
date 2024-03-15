@@ -21,6 +21,21 @@ class Generic:
         self.gui = gui
         self.currentView = MainMenu(self)
         self.fps = 60
+        self.timerLength = self.currentView.timer
+        self.timerSecond = 0
+
+    def secondPassed(self):
+        if self.timerLength == 0:
+            return
+        if self.timerSecond < self.timerLength:
+            print(self.timerSecond)
+            self.timerSecond += 1
+            self.gui.setTimerSeconds(self.timerSecond)
+        else:
+            self.timerFinished()
+            self.timerLength = 0
+            self.timerSecond = 0
+            self.gui.setTimerLength(self.timerLength)
 
     def getGameStatus(self):
         return self.gameStatus
@@ -43,6 +58,9 @@ class Generic:
         self.currentView = viewClass
         question = self.currentView.getGuiFormat()
         self.gui.setQuestion(question)
+        self.timerSecond = 0
+        self.timerLength = self.currentView.timer
+        self.gui.setTimerLength(self.timerLength)
 
     def moveUp(self):
         if self.selection > 0:
@@ -92,6 +110,7 @@ class ViewBuilder:
         self.options = {}
         self.hiddenOptions = {}
         self.gui = parent.gui
+        self.timer = 0
 
     def getGuiFormat(self):
         options = []
@@ -110,14 +129,15 @@ class ConfirmView(ViewBuilder):
             "y": ["Confirm", self.confirm],
             "n": ["Cancel", self.goBack],
         }
-        self.hiddenOptions = {"1": self.confirm, "2": self.goBack, "Timer": self.goBack}
+        self.hiddenOptions = {"1": self.confirm,
+                              "2": self.goBack, "Timer": self.goBack}
+        self.timer = 15
 
     def goBack(self):
         newView = self.previousView
         self.parent.setView(newView)
         self.parent.selection = 0
         self.parent.gui.setSelection(self.parent.selection)
-        print("555555")
 
     def confirm(self):
         self.action()

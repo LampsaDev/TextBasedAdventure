@@ -22,29 +22,12 @@ input = input.inputManager()
 
 gui.updateFrame()
 
-timerLenght = 10
-timerSecond = 0
-gui.setTimerLength(timerLenght)
+gui.setTimerLength(0)
 
 
 def getInput():
     char = input.getChar()
     gameLogic.checkInput(char)
-
-
-def secondPassed():
-    global timerLenght
-    global timerSecond
-    if timerLenght == 0:
-        return
-    if timerSecond < timerLenght:
-        timerSecond += 1
-        gui.setTimerSeconds(timerSecond)
-    else:
-        gameLogic.timerFinished()
-        timerLenght = 0
-        timerSecond = 0
-        gui.setTimerLength(timerLenght)
 
 
 frameStartTime = None
@@ -59,8 +42,7 @@ while gameLogic.getGameStatus():
     elapsedSecondTime = time.time() - secondStartTime
     getInput()
     if elapsedSecondTime >= 1:
-        secondPassed()
-        # ToDo must do desired action like not answering or missing attack
+        gameLogic.secondPassed()
         secondStartTime = None
     if elapsedFrameTime >= (1 / gameLogic.getFPS()):
         gui.updateFrame()
