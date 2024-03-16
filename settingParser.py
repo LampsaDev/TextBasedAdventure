@@ -1,6 +1,6 @@
-class settingParser:
+class SettingParser:
     def __init__(self, fileName):
-        self.parsedFile = self.parseFile(file)
+        self.parsedFile = self.parseFile(fileName)
 
     def openFile(self, fileName):
         try:
@@ -15,15 +15,17 @@ class settingParser:
             currentItem = None
             for currentLine in file:
                 line = currentLine.replace("\n", "")
+                line = line.split("#")[0]
+                if len(line) == 0:
+                    continue
 
                 line = (
                     line
                     if "d" in line or "desc" in line or "description" in line
                     else line.replace(" ", "")
                 )
-                if "#" in line:
-                    continue
-                elif ":" in line:
+
+                if ":" in line:
                     currentItem = str(line.replace(":", ""))
                     itemList[currentItem] = {}
                 elif "=" in line:
@@ -33,7 +35,7 @@ class settingParser:
                     else:
                         end = False
                     splitted = line.split("=")
-                    itemList[currentItem][splitted[0]] = splitted[1]
+                    itemList[currentItem][splitted[0]] = splitted[1].lstrip()
                     if end:
                         currentItem = None
                 elif ";" in line:
@@ -48,12 +50,3 @@ class settingParser:
             return self.parsedFile
         else:
             return None
-
-
-file = "setting/races.md"
-parser = settingParser(file)
-item1 = parser.getItems("Seppo")
-item2 = parser.getItems("Ismo")
-print(item1)
-print(item2)
-print(parser.getItems("all"))
