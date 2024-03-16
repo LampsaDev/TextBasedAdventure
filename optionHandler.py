@@ -129,8 +129,7 @@ class ConfirmView(ViewBuilder):
             "y": ["Confirm", self.confirm],
             "n": ["Cancel", self.goBack],
         }
-        self.hiddenOptions = {"1": self.confirm,
-                              "2": self.goBack, "Timer": self.goBack}
+        self.hiddenOptions = {"1": self.confirm, "2": self.goBack, "Timer": self.goBack}
         self.timer = 15
 
     def goBack(self):

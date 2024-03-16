@@ -75,7 +75,8 @@ class buffer:
 
         if terminalWidth < 64:
             self.drawTitleBar(
-                "Terminal must be atleast 64 columns. Now: " + str(terminalWidth)
+                "Terminal must be atleast 64 columns. Now: " +
+                str(terminalWidth)
             )
             self.updateRequest = False
             return
@@ -103,7 +104,8 @@ class buffer:
             titleHeight = self.drawTitleBar(self.scene)
             sceneHeight += self.drawOptions()
             sceneHeight += self.drawStatBar()
-            sceneHeight += self.drawHelperText("Press 'Space' to confirm", True, True)
+            sceneHeight += self.drawHelperText(
+                "Press 'Space' to confirm", True, True)
         # Fill the empty lines
         for line in range(self.verticalSize - sceneHeight - titleHeight):
             self.drawLine("")
@@ -151,9 +153,11 @@ class buffer:
             for i in range(longestWordWidth - len(option)):
                 filler += " "
             if self.selection == index:
-                lineAmount += self.drawLineCentered("> " + option + " <" + filler)
+                lineAmount += self.drawLineCentered(
+                    "> " + option + " <" + filler)
             else:
-                lineAmount += self.drawLineCentered("  " + option + "  " + filler)
+                lineAmount += self.drawLineCentered(
+                    "  " + option + "  " + filler)
         lineAmount += self.drawLine("")
         lineAmount += self.drawTimer()
         lineAmount += 1
@@ -247,7 +251,7 @@ class buffer:
         height = 1
 
         if filler < 0:
-            leftOvers = chars[self.horizontalSize :]
+            leftOvers = chars[self.horizontalSize:]
             chars = chars[: self.horizontalSize]
             splitLine = True
 
@@ -276,7 +280,7 @@ class buffer:
         filler = self.horizontalSize - len(chars)
         height = 1
         if filler < 0:
-            leftOvers = chars[self.horizontalSize :]
+            leftOvers = chars[self.horizontalSize:]
             chars = chars[: self.horizontalSize]
             self.drawLine(chars)
             height += self.drawLineCentered(leftOvers)

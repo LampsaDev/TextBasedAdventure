@@ -4,31 +4,21 @@ import inputManager as input
 import optionHandler
 import os
 
-
+"""
+Initialize the default view that will be opened when launching the app.
+"""
 gui = buffer(64, 24)
 gui.setScene("Main Menu")
 gui.setStats("")
 gui.setTimerLength(10)
-
 gameLogic = optionHandler.Generic(gui)
-
 welcomePage = ["jee", "juu"]
 question = gameLogic.currentView.getGuiFormat()
-
 gui.setContent(welcomePage)
 gui.setQuestion(question)
-
-input = input.inputManager()
-
 gui.updateFrame()
-
 gui.setTimerLength(0)
-
-
-def getInput():
-    char = input.getChar()
-    gameLogic.checkInput(char)
-
+input = input.inputManager()
 
 frameStartTime = None
 secondStartTime = None
@@ -40,7 +30,7 @@ while gameLogic.getGameStatus():
 
     elapsedFrameTime = time.time() - frameStartTime
     elapsedSecondTime = time.time() - secondStartTime
-    getInput()
+    gameLogic.checkInput(input.getChar())
     if elapsedSecondTime >= 1:
         gameLogic.secondPassed()
         secondStartTime = None
