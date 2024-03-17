@@ -1,6 +1,6 @@
 class SettingParser:
-    def __init__(self, fileName):
-        self.parsedFile = self.parseFile(fileName)
+    def __init__(self):
+        pass
 
     def openFile(self, fileName):
         try:
@@ -20,9 +20,8 @@ class SettingParser:
                     continue
 
                 line = (
-                    line
-                    if "d" in line or "desc" in line or "description" in line
-                    else line.replace(" ", "")
+                    line if "name" in line or "desc" in line else line.replace(
+                        " ", "")
                 )
 
                 if ":" in line:
@@ -43,10 +42,11 @@ class SettingParser:
 
         return itemList
 
-    def getItems(self, id):
-        if str(id) in self.parsedFile:
-            return self.parsedFile[id]
+    def getItems(self, id, fileName):
+        file = self.parseFile(fileName)
+        if str(id) in file:
+            return file[id]
         elif str(id) in [None, "", "all", "-1"]:
-            return self.parsedFile
+            return file
         else:
             return None

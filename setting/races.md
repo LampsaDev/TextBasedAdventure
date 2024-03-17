@@ -1,11 +1,11 @@
 # Human Race
-Human:
+Default:
   name = Human
   desc = Versatile and adaptable race.
-  strength = 10
-  agility = 10
-  intelligence = 10
-  vitality = 10
+  str = 10
+  agi = 10
+  int = 10
+  vit = 10
   hp = 100
 ;
 
@@ -13,10 +13,10 @@ Human:
 Elf:
   name = Elf
   desc = Graceful and attuned to magic.
-  strength = 8
-  agility = 12
-  intelligence = 12
-  vitality = 8
+  str = 8
+  agi = 12
+  int = 12
+  vit = 8
   hp = 90
 ;
 
@@ -24,10 +24,10 @@ Elf:
 Dwarf:
   name = Dwarf
   desc = Stout and skilled craftsmen.
-  strength = 12
-  agility = 8
-  intelligence = 10
-  vitality = 12
+  str = 12
+  agi = 8
+  int = 10
+  vit = 12
   hp = 110
 ;
 
@@ -35,44 +35,33 @@ Dwarf:
 Orc:
   name = Orc
   desc = Strong and fierce warriors.
-  strength = 14 # ksaldka
-  agility = 8
-  intelligence = 6
-  vitality = 12
+  str = 14 # ksaldka
+  agi = 8
+  int = 6
+  vit = 12
   hp = 120
-;
-
-# Khajiit Race
-Khajiit:
-  name = Khajiit
-  desc = Agile and stealthy feline humanoids.
-  strength = 8
-  agility = 14
-  intelligence = 10
-  vitality = 8
-  hp = 95
-;
-
-# Argonian Race
-Argonian:
-  name = Argonian
-  desc = Reptilian race with natural affinity for water.
-  strength = 10
-  agility = 10
-  intelligence = 12
-  vitality = 10
-  hp = 100
 ;
 
 # Nord Race
 Nord:
   name = Nord
   desc = Hardy and resistant to cold climates.
-  strength = 12
-  agility = 8
-  intelligence = 8
-  vitality = 12
+  str = 12
+  agi = 8
+  int = 8
+  vit = 12
   hp = 110
+;
+
+# Goblin Race
+Goblin:
+  name = Goblin
+  desc = Loves gold just like crows.
+  str = 5
+  agi = 14
+  int = 6  
+  vit = 14
+  hp = 70
 ;
 
 

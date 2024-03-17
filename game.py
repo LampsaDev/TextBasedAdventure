@@ -2,13 +2,14 @@ import time
 from screenUpdater import buffer
 import inputManager as input
 import optionHandler
-from settingParser import SettingParser
+from gameObjects.character import Character
 import os
 
 """
 Initialize the default view that will be opened when launching the app.
 """
-races = SettingParser("setting/races.md").getItems("all")
+
+player = Character("", "Elf", "Farmer", "Vindurvik")
 gui = buffer(64, 24)
 gui.setScene("Main Menu")
 gui.setStats("")
@@ -21,10 +22,10 @@ gui.setQuestion(question)
 gui.updateFrame()
 gui.setTimerLength(0)
 input = input.inputManager()
-print(races)
+print(player.getInfo())
 
 
-if True:
+if False:
     frameStartTime = None
     secondStartTime = None
     while gameLogic.getGameStatus():
@@ -42,5 +43,4 @@ if True:
         if elapsedFrameTime >= (1 / gameLogic.getFPS()):
             gui.updateFrame()
             frameStartTime = None
-
-os.system("clear")
+    os.system("clear")
