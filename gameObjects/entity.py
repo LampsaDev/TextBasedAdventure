@@ -6,13 +6,9 @@ Class for different npc and playable characters
 """
 
 
-class Character:
-    def __init__(self, name, race, occupation, faction):
+class Entity:
+    def __init__(self, name):
         self.name = name
-        self.giveName()
-        self.race = race
-        self.occupation = occupation
-        self.faction = faction
         self.stats = {
             "str": 0,
             "agi": 0,
@@ -22,7 +18,7 @@ class Character:
             "fame": 0,
             "repu": 0,
         }
-        self.equipment = {
+        self.invStats = {
             "blunt": 0,
             "cut": 0,
             "pierce": 0,
@@ -33,7 +29,7 @@ class Character:
             "speed": 0,
             "invSize": 0,
         }
-        self.invSize = 0
+        self.invSize = 1
         self.inv = {
             "head": None,
             "torso": None,
@@ -48,6 +44,53 @@ class Character:
             "right": None,
             "inv": [],
         }
+
+    def _initStat(self, file):
+        for stat in self.stats:
+            if self.stats[stat] == 0:
+                self.stats[stat] = int(file[stat]) if stat in file else 1
+            else:
+                self.stats[stat] += int(file[stat]) if stat in file else 0
+
+    def getStats(self):
+        return self.stats
+
+    def addToInv(self, item):
+        if len(self.inv["inv"]) < self.invSize:
+            self.inv["inv"].append(item)
+            return True
+        return False
+
+    def equipItem(self, item):
+        self.inv["inv"].remove(item)
+        if self.inv[item.slot]:
+            self.unequipItem(self.inv[item.slot])
+        self.inv[item.slot] = item
+        self.countStats()
+
+    def unequipItem(self, item):
+        if self.equipItem(item):
+            self.inv[item.slot].remove(item)
+            self.countStats()
+
+    def countStats(self):
+        for stat in self.invStats:
+            self.invStats[stat] = 0
+        for slot in self.inv:
+            if self.inv[slot] is None or slot == "inv":
+                continue
+            for stat in self.inv[slot].stats:
+                print(self.inv[slot].stats[stat])
+                self.invStats[stat] += self.inv[slot].stats[stat]
+
+
+class Character(Entity):
+    def __init__(self, name, race, occupation, faction):
+        super().__init__(name)
+        self.giveName()
+        self.race = race
+        self.occupation = occupation
+        self.faction = faction
         self.initStats()
         self.initInv()
 
@@ -92,37 +135,12 @@ class Character:
         pass
         # Todo
 
-    def _initStat(self, file):
-        for stat in self.stats:
-            if self.stats[stat] == 0:
-                self.stats[stat] = int(file[stat]) if stat in file else 1
-            else:
-                self.stats[stat] += int(file[stat]) if stat in file else 0
-
     def getInfo(self):
-        return [self.name, self.race, self.occupation, self.faction, self.stats]
-
-    def getStats(self):
-        return self.stats
-
-    def equipItem(self, item):
-        self.inv["inv"].remove(item)
-        if self.inv[item.slot]:
-            self.unequipItem(self.inv[item.slot])
-        self.inv[item.slot] = item
-        self.countStats(item.slot)
-
-    def unequipItem(self, item):
-        if len(self.inv["inv"]) < self.invSize:
-            self.inv["inv"].append(item)
-            self.inv[item.slot].remove(item)
-            self.countStats(item.slot)
-
-    def countStats(self, slot):
-        item = self.inv[slot]
-        if not item:
-            return
-
-        for stat in self.equipment:
-            if stat in item.stats:
-                self.equipment[stat] = item.stats[stat]
+        return [
+            self.name,
+            self.race,
+            self.occupation,
+            self.faction,
+            self.stats,
+            self.inv,
+        ]

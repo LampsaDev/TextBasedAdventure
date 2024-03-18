@@ -2,14 +2,15 @@ import time
 from screenUpdater import buffer
 import inputManager as input
 import optionHandler
-from gameObjects.character import Character
+import gameObjects.entity as Entity
+import gameObjects.items as Item
 import os
 
 """
 Initialize the default view that will be opened when launching the app.
 """
 
-player = Character("", "Elf", "Farmer", "Vindurvik")
+player = Entity.Character("", "Elf", "Farmer", "Vindurvik")
 gui = buffer(64, 24)
 gui.setScene("Main Menu")
 gui.setStats("")
@@ -23,7 +24,10 @@ gui.updateFrame()
 gui.setTimerLength(0)
 input = input.inputManager()
 print(player.getInfo())
-
+dagger = Item.Weapon("IronDagger")
+player.addToInv(dagger)
+player.equipItem(dagger)
+print(player.getInfo())
 
 if False:
     frameStartTime = None
