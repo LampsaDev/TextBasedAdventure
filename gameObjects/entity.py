@@ -84,7 +84,7 @@ class Entity:
 
 
 class Character(Entity):
-    def __init__(self, name, race, occupation, faction):
+    def __init__(self, name, race="", occupation="", faction=""):
         super().__init__(name)
         self.giveName()
         self.race = race

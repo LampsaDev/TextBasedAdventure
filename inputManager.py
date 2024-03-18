@@ -2,6 +2,7 @@ import sys
 import tty
 import termios
 import select
+import os
 
 
 class inputManager:
@@ -16,7 +17,7 @@ class inputManager:
         try:
             tty.setraw(fd)
             # Check if there's input available within a short timeout
-            if select.select([sys.stdin], [], [], 0.1)[0]:
+            if select.select([sys.stdin], [], [], 0.05)[0]:
                 char = sys.stdin.read(1)
                 self.previousKey = char
 
@@ -27,10 +28,15 @@ class inputManager:
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, oldSettings)
 
-    def getText(self, maxLen):
+    def getText(self, maxLen=15, title="Input"):
         text = []
         while True:
             self.getChar()
+            os.system("clear")
+            print(title)
+            line = "".join(text)
+            print(line)
+            print(str(len(line)) + "/" + str(maxLen))
             if self.previousKey == "\r":
                 return "".join(text)
             elif self.previousKey == "\x7f" and len(text) > 0:
