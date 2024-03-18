@@ -27,8 +27,17 @@ class inputManager:
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, oldSettings)
 
-    def getText(self):
-        return self.previousKeys
+    def getText(self, maxLen):
+        text = []
+        while True:
+            self.getChar()
+            if self.previousKey == "\r":
+                return "".join(text)
+            elif self.previousKey == "\x7f" and len(text) > 0:
+                text.pop()
+            elif self.previousKey != "" and len(text) < maxLen:
+                text.append(self.previousKey)
+            self.previousKey = ""
 
     def previousInputs(self, newChar):
         self.previousKeys.append(newChar)

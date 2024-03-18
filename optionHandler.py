@@ -1,4 +1,4 @@
-import time
+import inputManager as input
 
 """
 Classes for converting inputs to actions
@@ -23,6 +23,7 @@ class Generic:
         self.fps = 60
         self.timerLength = self.currentView.timer
         self.timerSecond = 0
+        self.input = input.inputManager()
 
     def secondPassed(self):
         if self.timerLength == 0:
@@ -47,11 +48,13 @@ class Generic:
         print("quit")
         self.gameStatus = False
 
-    def checkInput(self, input):
+    def checkInput(self, length=0):
+        if length > 0:
+            return self.input.getText(length)  # tODO NOT SURE HOW WORKS
+        input = self.input.getChar()
         if input.isnumeric():
             self.numberInput(input)
-            return
-        if input in self.options:
+        elif input in self.options:
             self.options[input]()
 
     def setView(self, viewClass):
@@ -129,7 +132,8 @@ class ConfirmView(ViewBuilder):
             "y": ["Confirm", self.confirm],
             "n": ["Cancel", self.goBack],
         }
-        self.hiddenOptions = {"1": self.confirm, "2": self.goBack, "Timer": self.goBack}
+        self.hiddenOptions = {"1": self.confirm,
+                              "2": self.goBack, "Timer": self.goBack}
         self.timer = 15
 
     def goBack(self):

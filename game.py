@@ -1,6 +1,5 @@
 import time
 from screenUpdater import buffer
-import inputManager as input
 import optionHandler
 import gameObjects.entity as Entity
 import gameObjects.items as Item
@@ -22,14 +21,14 @@ gui.setContent(welcomePage)
 gui.setQuestion(question)
 gui.updateFrame()
 gui.setTimerLength(0)
-input = input.inputManager()
 print(player.getInfo())
 dagger = Item.Weapon("IronDagger")
 player.addToInv(dagger)
 player.equipItem(dagger)
 print(player.getInfo())
 
-if False:
+
+if True:
     frameStartTime = None
     secondStartTime = None
     while gameLogic.getGameStatus():
@@ -40,7 +39,7 @@ if False:
 
         elapsedFrameTime = time.time() - frameStartTime
         elapsedSecondTime = time.time() - secondStartTime
-        gameLogic.checkInput(input.getChar())
+        gameLogic.checkInput()
         if elapsedSecondTime >= 1:
             gameLogic.secondPassed()
             secondStartTime = None

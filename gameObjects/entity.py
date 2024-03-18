@@ -80,7 +80,6 @@ class Entity:
             if self.inv[slot] is None or slot == "inv":
                 continue
             for stat in self.inv[slot].stats:
-                print(self.inv[slot].stats[stat])
                 self.invStats[stat] += self.inv[slot].stats[stat]
 
 
