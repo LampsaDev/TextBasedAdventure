@@ -1,6 +1,7 @@
 from settingParser import SettingParser
 import random
 
+
 """
 Class for different npc and playable characters
 """

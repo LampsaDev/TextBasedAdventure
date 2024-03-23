@@ -1,5 +1,6 @@
 import inputManager as input
 import gameObjects.entity as entity
+from settingParser import SettingParser
 
 """
 Classes for converting inputs to actions
@@ -59,7 +60,7 @@ class Generic:
             self.options[input]()
 
     def checkInputText(self, length, title):
-        return self.input.getText(length, title)
+        return self.input.getText(length, title, self.gui)
 
     def setView(self, viewClass):
         self.currentView = viewClass
@@ -67,8 +68,9 @@ class Generic:
         text = self.currentView.getTextFormat()
         self.gui.setQuestion(question)
         self.gui.setContent(text)
-        self.timerSecond = 0
         self.selection = 0
+        self.gui.setSelection(self.selection)
+        self.timerSecond = 0
         self.timerLength = self.currentView.timer
         self.gui.setTimerLength(self.timerLength)
 
@@ -153,6 +155,9 @@ class ViewBuilder:
             text[1] = self.textField[1]
         return text
 
+    def setView(self, newView, variables=[]):
+        self.parent.setView(newView)
+
 
 class ConfirmView(ViewBuilder):
     def __init__(self, parent, previousView, action):
@@ -161,11 +166,11 @@ class ConfirmView(ViewBuilder):
         self.previousView = previousView
         self.title = "Are you sure you want to quit?"
         self.options = {
-            "y": ["Confirm", self.confirm],
-            "n": ["Cancel", self.goBack],
+            "1": ["Confirm", self.confirm],
+            "2": ["Cancel", self.goBack],
         }
-        self.hiddenOptions = {"1": self.confirm,
-                              "2": self.goBack, "Timer": self.goBack}
+        self.hiddenOptions = {"y": self.confirm,
+                              "n": self.goBack, "Timer": self.goBack}
         self.timer = 15
 
     def confirm(self):
@@ -183,9 +188,7 @@ class MainMenu(ViewBuilder):
         }
 
     def newGame(self):
-        newView = SetName(self.parent, self)
-        self.parent.setView(newView)
-        self.parent.selection = -1
+        self.setView(SetName(self.parent, self))
 
     def loadGame(self):
         pass
@@ -194,6 +197,7 @@ class MainMenu(ViewBuilder):
         newView = ConfirmView(self.parent, self, self.parent.forceQuit)
         self.parent.setView(newView)
         self.parent.selection = -1
+        self.gui.setSelection(-1)
 
 
 class SetName(ViewBuilder):
@@ -202,15 +206,52 @@ class SetName(ViewBuilder):
         self.previousView = previousView
         self.title = "Choose your name."
         self.name = ""
+        self.selections = []
         self.setName()
         self.options = {
-            "y": [f"Select {self.name} as your name", self.confirm],
-            "n": ["Cancel", self.goBack],
+            "1": [f"Select {self.name} as your name", self.confirm],
+            "2": ["Cancel", self.goBack],
         }
-        self.hiddenOptions = {}
+        self.hiddenOptions = {"y": self.confirm, "n": self.goBack}
 
     def confirm(self):
-        player = entity.Character(self.name)
+        self.selections.append(self.name)
+        self.setView(SetRace(self.parent, self, self.selections))
 
     def setName(self):
         self.name = self.parent.checkInputText(15, "Set firstname:")
+
+
+class SetRace(ViewBuilder):
+    def __init__(self, parent, previousView, selections):
+        super().__init__(parent)
+        self.previousView = previousView
+        self.title = "Choose your race."
+        self.selections = selections
+        self.race = None
+        self.races = None
+        self.getRaces()
+        self.setupOptions()
+        self.options = {}
+        self.hiddenOptions = {"y": self.select, "n": self.goBack}
+
+    def setupOptions(self):
+        i = 1
+        for race in self.races:
+            print()  # TODO ei toimi vielä......
+            self.options[f"{i}"] = [self.races[race], self.select]
+            i += 1
+
+        self.options[f"{i}"] = ["Cancel", self.goBack]
+
+    def getRaces(self):
+        parser = SettingParser()
+        dir = "setting/"
+
+        self.races = parser.getItems("all", dir + "races.md")
+
+    def select(self):
+        pass
+
+    def setRace(self):
+        pass

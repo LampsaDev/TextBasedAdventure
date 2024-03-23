@@ -14,17 +14,14 @@ class buffer:
     def __init__(self, xSize, ySize):
         self.horizontalSize = xSize - 3
         self.verticalSize = ySize
-
-    timerLengthInSeconds = 0
-    currentTimeInSeconds = 0
-    scene = None
-    content = None
-    question = None
-    stats = None
-
-    updateRequest = False
-
-    selection = 0
+        self.timerLengthInSeconds = 0
+        self.currentTimeInSeconds = 0
+        self.scene = None
+        self.content = None
+        self.question = None
+        self.stats = None
+        self.updateRequest = False
+        self.selection = 0
 
     """
     Updates scene
@@ -115,12 +112,12 @@ class buffer:
     Draws text container with current actions
     """
 
-    def drawTextBox(self):
-        if not self.content:
+    def drawTextBox(self, content):
+        if not content:
             return 0
         # Split text into smaller chuncks
-        self.drawLineCentered(self.content[0])
-        textArr = self.splitTextToArray(self.content[1])
+        self.drawLineCentered(content[0])
+        textArr = self.splitTextToArray(content[1])
         textHeight = 1
         for line in textArr:
             text = ""

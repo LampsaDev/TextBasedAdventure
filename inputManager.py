@@ -28,15 +28,20 @@ class inputManager:
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, oldSettings)
 
-    def getText(self, maxLen=15, title="Input"):
+    def getText(self, maxLen=15, title="Input", gui=None):
         text = []
         while True:
             self.getChar()
-            os.system("clear")
-            print(title)
             line = "".join(text)
-            print(line)
-            print(str(len(line)) + "/" + str(maxLen))
+            lineLen = str(len(line)) + "/" + str(maxLen)
+            os.system("clear")
+            if gui:
+                gui.drawTextBox([title + " " + lineLen, line])
+            else:
+                print(title)
+                print(line)
+                print(lineLen)
+
             if self.previousKey == "\r":
                 return "".join(text)
             elif self.previousKey == "\x7f" and len(text) > 0:
